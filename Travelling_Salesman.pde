@@ -1,7 +1,7 @@
 import java.util.Arrays;
 import java.util.Comparator;
 
-int N = 8;
+int N = 10;
 int popSize = 100;
 int[] vals = new int[N];
 int[] order = new int[N];
@@ -14,11 +14,13 @@ int[] bestDNA;
 int[] bestBrute;
 DNA[] population = new DNA[popSize];
 
-Graph genetic = new Graph(300,340);
-Graph brute = new Graph(300,340);
+Graph genetic;
+Graph brute;
 
 void setup() {
-  size(720,360);
+  size(1200,660);
+  genetic = new Graph((width/2)-20,height-20);
+  brute = new Graph((width/2)-20,height-20);
   for(int i = 0; i < N; i++){
   order[i] = i;
   }
@@ -72,18 +74,25 @@ void draw() {
   genetic.addPoint(generation, DNARecord);
   
   //Brute Force Algorithm
+  boolean quit = false;
   for(int p = 0; p < popSize; p++){
     if(!advComb(vals)){
-      noLoop();
-      break;
+      quit = true;
     }
     d = calcDist(vals);
     if(d < BruteRecord){
       bestBrute = vals.clone();
       BruteRecord = d;
     }
+    if(quit){
+      break;
+    }
   }
-  brute.addPoint(generation, BruteRecord);
+  if(!quit){
+    brute.addPoint(generation, BruteRecord);
+  } else {
+    brute.maxX = generation;
+  }
   
   //Draw Brute
   pushMatrix();
@@ -133,19 +142,46 @@ void draw() {
   stroke(128, 255, 128);
   genetic.show();
   popMatrix();
+  
+  //Draw Progress Bar
+  float progress = calcProgress(vals);
+  progress *= width;
+  stroke(128,128,255);
+  strokeWeight(6);
+  line(0,height-2, progress, height-2);
+  
+  //Check quit condition
+  if(DNARecord <= BruteRecord && quit){
+    noLoop();
+  }
 }
 
-
-void swapVect(PVector[] a, int i, int j){
-  PVector temp = a[i];
-  a[i] = a[j];
-  a[j] = temp;
+//Type specific functions *sigh*
+void swapVect(PVector[] l, int i, int j){
+  PVector temp = l[i];
+  l[i] = l[j];
+  l[j] = temp;
+}
+void swapInt(int[] l, int a, int b){
+  int temp = l[b];
+  l[b] = l[a];
+  l[a] = temp;
 }
 
+//Takes the order rather than the list of cities
 float calcDist(int[] a){
   float total = 0;
   for (int i = 1; i < a.length; i++){
     total += dist(cities[a[i-1]].x, cities[a[i-1]].y, cities[a[i]].x, cities[a[i]].y);
   }
   return total;
+}
+
+//Not entirely accurate, but gives a good rough idea, better at greater N
+float calcProgress(int[] l){
+  float done = 0;
+  for(int i = 0; i < l.length; i++){
+    done += vals[i]/pow(N,i+1);
+  }
+  return done;
 }

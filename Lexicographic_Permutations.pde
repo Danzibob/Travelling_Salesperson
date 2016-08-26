@@ -23,12 +23,6 @@ boolean advComb(int[] vals){
   reverseSection(vals,largestX+1, vals.length-1);
   return true;
 }
- //<>// //<>// //<>//
-void swapInt(int[] l, int a, int b){
-  int temp = l[b];
-  l[b] = l[a];
-  l[a] = temp;
-}
 
 void reverseSection(int[] l, int a, int b){
   int sectLen = abs(b-a);

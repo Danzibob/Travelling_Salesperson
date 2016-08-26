@@ -5,12 +5,14 @@ class Graph {
   float maxX = 0;
   float maxY = 0;
   Graph(int wid, int hei){
+    //Initialises with a width and height
     w = wid;
     h = hei;
     points = new ArrayList<PVector>();
   }
   
   void addPoint(float x, float y){
+    //Adds a point to the points list
     PVector p = new PVector(x,y);
     points.add(p);
     if(x > maxX){maxX = x;}
@@ -18,6 +20,7 @@ class Graph {
   }
   
   void show(){
+    //Draw Data
     strokeWeight(1);
     float Xscale = w/maxX;
     float Yscale = h/maxY;
@@ -30,6 +33,8 @@ class Graph {
         line(x1,y1,x2,y2);
       }
     }
+    
+    //Draw Axes
     strokeWeight(2);
     stroke(255);
     line(0,0,0,h);

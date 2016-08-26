@@ -1,18 +1,20 @@
-
 class DNA implements Comparable<DNA> {
   int[] order = new int[N];
   float score;
   DNA(){
+    //Creates a random order
     for(int i=0; i<N; i++){
       order[i] = i;
     }
     ShuffleArray(order);
   }
   DNA(int [] data){
+    //Creates a genome with the oredr given
     order = data;
   }
   @Override
   public int compareTo(DNA other) {
+    //Allows DNA[] to be sorted by score
     if(score < other.score){
       return -1;
     } else if(score > other.score){
@@ -22,7 +24,7 @@ class DNA implements Comparable<DNA> {
     }
   }
   DNA crossover(DNA other){
-    //generate 2 random non-equal pointers
+    //Generate 2 random non-equal pointers
     int a = floor(random(other.order.length));
     int b = a;
     while(b == a){
@@ -48,18 +50,19 @@ class DNA implements Comparable<DNA> {
     b = 0;
     
     //ugly bit
-    while(b < N){ //<>//
+    while(b < N){
       if(l[b] == -1){
         if(!contains(l,other.order[a])){
           l[b] = other.order[a];
-          b += 1; //<>//
+          b += 1;
         }
-        a += 1; //<>//
+        a += 1;
       } else {
-        b += 1; //<>//
+        b += 1;
       }
     }
     
+    //Random mutation
     if(random(1) < 0.1){
       swapInt(l,floor(random(N)),floor(random(N)));
     }
@@ -84,6 +87,7 @@ void ShuffleArray(int[] array)
     }
 }
 
+//Function I found didn't work so I wrote my own
 boolean contains(int[] arr, int x){
   for(int i = 0; i < arr.length; i++){
     if(arr[i] == x){
@@ -92,9 +96,3 @@ boolean contains(int[] arr, int x){
   }
   return false;
 }
-
-//void swapInt(int[] a, int i, int j){
-//  int temp = a[i];
-//  a[i] = a[j];
-//  a[j] = temp;
-//}
